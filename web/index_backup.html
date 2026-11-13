@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V.N World</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080f1e;color:white;
+ font-family:Arial,sans-serif;padding:20px;
+}
+header{display:flex;align-items:center;gap:12px;margin-bottom:25px}
+.logo{
+ background:linear-gradient(135deg,#1769ff,#7b35db);
+ padding:14px;border-radius:16px;font-weight:bold;font-size:20px;
+}
+h1{font-size:25px;margin:0}
+small{color:#91a5c5}
+.welcome{
+ background:linear-gradient(120deg,#173d83,#442477);
+ padding:23px;border-radius:20px;margin-bottom:24px;
+}
+.welcome h2{margin:0 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.item{
+ background:#131f33;border:1px solid #263750;
+ border-radius:17px;padding:19px 13px;
+ min-height:112px;cursor:pointer;
+}
+.item:active{background:#263d65}
+.emoji{font-size:27px}
+.item h3{margin:10px 0 5px;font-size:16px}
+.item p{margin:0;color:#91a5c5;font-size:12px}
+#content{
+ display:none;background:#131f33;border-radius:18px;
+ padding:20px;margin-top:20px;
+}
+button{
+ background:#2768e9;color:white;border:0;
+ padding:12px 18px;border-radius:10px;margin-top:12px;
+}
+footer{text-align:center;color:#7185a4;margin-top:30px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">V.N</div>
+<div>
+<h1>V.N WORLD</h1>
+<small>Your world, your possibilities</small>
+</div>
+</header>
+
+<div class="welcome">
+<h2>Xoş gəlmisən! 👋</h2>
+<p>Öz dünyanı kəşf et.</p>
+<small>V.N World – hər şey bir yerdə!</small>
+</div>
+
+<h2>✨ Xidmətlərimiz</h2>
+<div class="grid">
+<div class="item" onclick="openPage('V.N AI','Süni intellekt köməkçin burada olacaq.')">
+<div class="emoji">🤖</div><h3>V.N AI</h3><p>Süni intellekt</p>
+</div>
+<div class="item" onclick="openPage('Mesajlaşma','Dostlarınla söhbət et.')">
+<div class="emoji">💬</div><h3>Chat</h3><p>Söhbət və yazışma</p>
+</div>
+<div class="item" onclick="openPage('Oyunlar','Əyləncəli oyunlar burada olacaq.')">
+<div class="emoji">🎮</div><h3>Oyunlar</h3><p>Əylən və oyna</p>
+</div>
+<div class="item" onclick="openPage('Musiqi','Musiqi bölməsi.')">
+<div class="emoji">🎵</div><h3>Musiqi</h3><p>Dinlə və redaktə et</p>
+</div>
+<div class="item" onclick="openPage('Video','Video redaktə alətləri.')">
+<div class="emoji">🎬</div><h3>Video</h3><p>Videolarını redaktə et</p>
+</div>
+<div class="item" onclick="openPage('Photo AI','AI foto redaktə bölməsi.')">
+<div class="emoji">🖼️</div><h3>Photo AI</h3><p>Şəkillərini dəyişdir</p>
+</div>
+<div class="item" onclick="openPage('Profil','Şəxsi profilin burada olacaq.')">
+<div class="emoji">👤</div><h3>Profil</h3><p>Hesab və ayarlar</p>
+</div>
+<div class="item" onclick="openPage('Haqqımızda','V.N World haqqında.')">
+<div class="emoji">🌍</div><h3>Haqqımızda</h3><p>Bizim dünyamız</p>
+</div>
+</div>
+
+<div id="content">
+<h2 id="pageTitle"></h2>
+<p id="pageText"></p>
+<button onclick="closePage()">Geri qayıt</button>
+</div>
+
+<footer>© 2026 V.N World | All rights reserved</footer>
+
+<script>
+function openPage(title,text){
+ document.getElementById('content').style.display='block';
+ document.getElementById('pageTitle').innerText=title;
+ document.getElementById('pageText').innerText=text;
+ document.getElementById('content').scrollIntoView({behavior:'smooth'});
+}
+function closePage(){
+ document.getElementById('content').style.display='none';
+}
+</script>
+<div id="login">
+  <h2>V.N WORLD</h2>
+  <input type="text" placeholder="Adını yaz">
+  <input type="email" placeholder="Gmail ünvanın">
+  <input type="password" placeholder="Şifrə">
+  <button onclick="alert('Xoş gəldin!')">Daxil ol</button>
+</div>
+O<script>
+const oldOpenPage = openPage;
+
+function openPage(title,text){
+  document.getElementById('content').style.display='block';
+  document.getElementById('pageTitle').innerText=title;
+
+  if(title==='Profil'){
+    document.getElementById('pageText').innerHTML=`
+      <input id="profileName" placeholder="Adın">
+      <br><br>
+      <input id="profileUser" placeholder="İstifadəçi adın">
+      <br><br>
+      <button onclick="saveProfile()">Profili yadda saxla</button>
+      <p id="profileMessage"></p>
+    `;
+  } else {
+    document.getElementById('pageText').innerText=text;
+  }
+}
+
+function saveProfile(){
+  localStorage.setItem('vnName',document.getElementById('profileName').value);
+  localStorage.setItem('vnUser',document.getElementById('profileUser').value);
+  document.getElementById('profileMessage').innerText='Profil yadda saxlandı!';
+}
+</script>
+<script>
+function openPage(title,text){
+  document.getElementById('content').style.display='block';
+  document.getElementById('pageTitle').innerText=title;
+
+  if(title==='Profil'){
+    let photo=localStorage.getItem('vnPhoto') || '';
+    document.getElementById('pageText').innerHTML=`
+      <img id="myPhoto" src="${photo}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;display:block;margin:10px auto">
+      <input type="file" accept="image/*" onchange="choosePhoto(this)">
+      <br><br>
+      <input id="profileName" placeholder="Adın">
+      <br><br>
+      <input id="profileUser" placeholder="İstifadəçi adın">
+      <br><br>
+      <button onclick="saveProfile()">Profili yadda saxla</button>
+      <p id="profileMessage"></p>
+    `;
+    document.getElementById('profileName').value=localStorage.getItem('vnName') || '';
+    document.getElementById('profileUser').value=localStorage.getItem('vnUser') || '';
+  } else {
+    document.getElementById('pageText').innerText=text;
+  }
+}
+
+function choosePhoto(input){
+  if(!input.files[0]) return;
+  if(input.files[0].size>1000000){
+    alert('Şəkil 1 MB-dan kiçik olmalıdır');
+    return;
+  }
+  let reader=new FileReader();
+  reader.onload=function(){
+    localStorage.setItem('vnPhoto',reader.result);
+    document.getElementById('myPhoto').src=reader.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function saveProfile(){
+  localStorage.setItem('vnName',document.getElementById('profileName').value);
+  localStorage.setItem('vnUser',document.getElementById('profileUser').value);
+  document.getElementById('profileMessage').innerText='Profil yadda saxlandı!';
+}
+</script>
+</body>
+</html>

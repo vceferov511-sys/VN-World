@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V.N World</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080f1e;color:white;font-family:Arial}
+header{display:flex;align-items:center;gap:12px;margin-bottom:25px}
+.logo{background:linear-gradient(135deg,#1769ff,#7b35db);padding:14px;border-radius:15px;font-weight:bold}
+h1{font-size:24px;margin:0}
+small,p{color:#91a5c5}
+.welcome{background:linear-gradient(120deg,#173d83,#442477);padding:22px;border-radius:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px}
+.item,#content{background:#131f33;border:1px solid #263750;border-radius:16px;padding:17px}
+.item{cursor:pointer}
+.item h3{margin:10px 0 5px}
+.emoji{font-size:27px}
+#content{display:none;margin-top:20px}
+input,textarea{width:100%;padding:13px;margin:7px 0;background:#202e45;color:white;border:1px solid #425675;border-radius:9px}
+textarea{min-height:80px}
+button{background:#2768e9;color:white;border:0;padding:12px 18px;border-radius:9px;margin-top:10px}
+#myPhoto{width:100px;height:100px;border-radius:50%;object-fit:cover;display:block;margin:10px auto}
+footer{text-align:center;margin-top:30px;color:#7185a4;font-size:12px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">V.N</div>
+<div><h1>V.N WORLD</h1><small>Your world, your possibilities</small></div>
+</header>
+
+<div class="welcome">
+<h2>Xoş gəlmisən! 👋</h2>
+<p>V.N World – hər şey bir yerdə!</p>
+</div>
+
+<h2>✨ Xidmətlərimiz</h2>
+<div class="grid">
+<div class="item" onclick="openAI()"><div class="emoji">🤖</div><h3>V.N AI</h3><small>Süni intellekt</small></div>
+<div class="item" onclick="openPage('Chat','Mesajlaşma sistemi hazırlanacaq.')"><div class="emoji">💬</div><h3>Chat</h3><small>Söhbət və yazışma</small></div>
+<div class="item" onclick="openPage('Oyunlar','Əyləncəli oyunlar burada olacaq.')"><div class="emoji">🎮</div><h3>Oyunlar</h3><small>Əylən və oyna</small></div>
+<div class="item" onclick="openPage('Musiqi','Musiqi bölməsi hazırlanacaq.')"><div class="emoji">🎵</div><h3>Musiqi</h3><small>Dinlə və redaktə et</small></div>
+<div class="item" onclick="openPage('Video','Video redaktə alətləri hazırlanacaq.')"><div class="emoji">🎬</div><h3>Video</h3><small>Videolarını redaktə et</small></div>
+<div class="item" onclick="openPage('Photo AI','AI foto redaktə bölməsi hazırlanacaq.')"><div class="emoji">🖼️</div><h3>Photo AI</h3><small>Şəkillərini dəyişdir</small></div>
+<div class="item" onclick="openPage('Profil','')"><div class="emoji">👤</div><h3>Profil</h3><small>Şəxsi hesabın</small></div>
+<div class="item" onclick="openPage('Haqqımızda','V.N World haqqında.')"><div class="emoji">🌍</div><h3>Haqqımızda</h3><small>Bizim dünyamız</small></div>
+</div>
+
+<div id="content">
+<h2 id="pageTitle"></h2>
+<div id="pageText"></div>
+<button onclick="closePage()">Geri qayıt</button>
+</div>
+
+<footer>© 2026 V.N World</footer>
+
+<script>
+function openPage(title,text){
+ document.getElementById('content').style.display='block';
+ document.getElementById('pageTitle').innerText=title;
+ const area=document.getElementById('pageText');
+
+ if(title==='Profil'){
+  area.innerHTML=`
+   <img id="myPhoto" src="" alt="Profil şəkli">
+   <input type="file" accept="image/*" onchange="choosePhoto(this)">
+   <input id="profileName" placeholder="Adın">
+   <input id="profileUser" placeholder="İstifadəçi adın">
+   <textarea id="about" placeholder="Haqqımda"></textarea>
+   <button onclick="saveProfile()">Profili yadda saxla</button>
+   <p id="profileMessage"></p>
+  `;
+  document.getElementById('profileName').value=localStorage.getItem('vnName')||'';
+  document.getElementById('profileUser').value=localStorage.getItem('vnUser')||'';
+  document.getElementById('about').value=localStorage.getItem('vnAbout')||'';
+  document.getElementById('myPhoto').src=localStorage.getItem('vnPhoto')||'';
+ }else{
+  area.innerText=text;
+ }
+}
+function choosePhoto(input){
+ if(!input.files[0])return;
+ if(input.files[0].size>1000000){
+  alert('Şəkil 1 MB-dan kiçik olmalıdır');
+  return;
+ }
+ const reader=new FileReader();
+ reader.onload=function(){
+  localStorage.setItem('vnPhoto',reader.result);
+  document.getElementById('myPhoto').src=reader.result;
+ };
+ reader.readAsDataURL(input.files[0]);
+}
+function saveProfile(){
+ localStorage.setItem('vnName',document.getElementById('profileName').value);
+ localStorage.setItem('vnUser',document.getElementById('profileUser').value);
+ localStorage.setItem('vnAbout',document.getElementById('about').value);
+ document.getElementById('profileMessage').innerText='Profil yadda saxlandı!';
+}
+function closePage(){
+ document.getElementById('content').style.display='none';
+}
+
+function openAI(){
+ const area=document.getElementById('pageText');
+ document.getElementById('content').style.display='block';
+ document.getElementById('pageTitle').innerText='V.N AI 🤖';
+ area.innerHTML=`
+ <div style="background:#0b1629;padding:15px;border-radius:12px">
+  <div id="aiMessages" style="min-height:180px;max-height:300px;overflow:auto">
+   <p>🤖 Salam! Mən V.N AI. Sənə necə kömək edə bilərəm?</p>
+  </div>
+  <input id="aiInput" placeholder="Mesajını yaz...">
+  <button onclick="sendAI()">Göndər</button>
+ </div>`;
+}
+
+async function sendAI(){
+ const input=document.getElementById('aiInput');
+ const messages=document.getElementById('aiMessages');
+ const value=input.value.trim();
+ if(!value)return;
+
+ messages.innerHTML+=`<p><b>Sən:</b> ${value.replace(/</g,'&lt;')}</p>`;
+ input.value='';
+
+ try {
+  const response=await fetch('http://127.0.0.1:3000/chat',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({message:value})
+  });
+
+  const data=await response.json();
+  messages.innerHTML+=`<p><b>V.N AI:</b> ${data.reply || data.error}</p>`;
+ } catch(error) {
+  messages.innerHTML+='<p>Serverlə əlaqə qurulmadı.</p>';
+ }
+
+ messages.scrollTop=messages.scrollHeight;
+}function sendAI(){
+ const input=document.getElementById('aiInput');
+ const messages=document.getElementById('aiMessages');
+ const value=input.value.trim();
+ if(!value)return;
+ messages.innerHTML+=`<p><b>Sən:</b> ${value.replace(/</g,'&lt;')}</p>`;
+ messages.innerHTML+=`<p><b>V.N AI:</b> Mən hələ sınaq rejimindəyəm. Tezliklə ağıllı cavab sistemi qoşacağıq. 🤖</p>`;
+ input.value='';
+ messages.scrollTop=messages.scrollHeight;
+}</script>
+</body>
+</html>

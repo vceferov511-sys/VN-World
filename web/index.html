@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>V.N World</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080f1e;color:white;font-family:Arial}
+header{display:flex;gap:12px;align-items:center;margin-bottom:25px}
+.logo{background:#2768e9;padding:15px;border-radius:12px;font-weight:bold}
+.welcome,.item,#content{background:#131f33;padding:18px;border-radius:14px;margin-bottom:14px}
+small,p{color:#91a5c5}
+button{background:#2768e9;color:white;border:0;padding:12px 18px;border-radius:9px}
+input{width:100%;padding:13px;margin:10px 0;background:#263750;color:white;border:0;border-radius:8px}
+#aiMessages{max-height:300px;overflow:auto}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">V.N</div>
+<div><h1>V.N WORLD</h1><small>Your world, your possibilities</small></div>
+</header>
+
+<div class="welcome">
+<h2>Xoş gəlmisən! 👋</h2>
+<p>V.N World – hər şey bir yerdə!</p>
+</div>
+
+<div class="item">
+<h3>🤖 V.N AI</h3>
+<div id="aiMessages">Salam! Mən V.N AI. Sənə necə kömək edə bilərəm?</div>
+<input id="aiInput" placeholder="Mesajını yaz...">
+<button onclick="sendAI()">Göndər</button>
+</div>
+
+<script>
+async function sendAI(){
+ const input=document.getElementById('aiInput');
+ const messages=document.getElementById('aiMessages');
+ const value=input.value.trim();
+ if(!value)return;
+ messages.innerHTML+='<p><b>Sən:</b> '+value.replace(/</g,'&lt;')+'</p>';
+ input.value='';
+ try{
+  const response=await fetch('http://127.0.0.1:3000/chat',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({message:value})
+  });
+  const data=await response.json();
+  messages.innerHTML+='<p><b>V.N AI:</b> '+(data.reply||data.error)+'</p>';
+ }catch(error){
+  messages.innerHTML+='<p>Serverlə əlaqə qurulmadı.</p>';
+ }
+ messages.scrollTop=messages.scrollHeight;
+}
+</script>
+</body>
+</html>
