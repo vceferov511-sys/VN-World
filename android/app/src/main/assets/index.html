@@ -117,7 +117,24 @@ nav button.active{color:#73baff}
  <div class="placeholder"><div class="big">🌐</div><h2>İcma</h2><p>İcma bölməsi hazırlanacaq.</p></div>
 </section>
 <section id="profile" class="view">
- <div class="placeholder"><div class="big">👤</div><h2>Profil</h2><p>Profil ayarları hazırlanacaq.</p></div>
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <div class="panel" style="text-align:center">
+  <div id="profilePhoto" style="width:105px;height:105px;border-radius:50%;background:#263e79;margin:10px auto;display:grid;place-items:center;font-size:45px;overflow:hidden">👤</div>
+  <input id="photoInput" type="file" accept="image/*" style="display:none" onchange="changePhoto(event)">
+  <button class="send" style="padding:12px 18px" onclick="document.getElementById('photoInput').click()">Şəkil seç</button>
+  <h2 id="profileName">V.N World istifadəçisi</h2>
+  <p id="profileUsername" style="color:#91a6cb">@istifadeci</p>
+  <div style="text-align:left;margin-top:25px">
+   <label>Adın</label>
+   <input id="editName" placeholder="Adını yaz" style="width:100%;margin:8px 0 15px">
+   <label>İstifadəçi adı</label>
+   <input id="editUsername" placeholder="İstifadəçi adını yaz" style="width:100%;margin:8px 0 15px">
+   <label>Haqqımda</label>
+   <textarea id="editBio" placeholder="Özün haqqında yaz" style="width:100%;height:90px;padding:12px;background:#0c1830;color:white;border:1px solid #344a70;border-radius:12px;margin-top:8px"></textarea>
+   <button class="send" style="width:100%;padding:14px;margin-top:18px" onclick="saveProfile()">Yadda saxla</button>
+   <p id="profileBio" style="color:#b8c9e8;text-align:center"></p>
+  </div>
+ </div>
 </section>
 </main>
 
@@ -129,7 +146,44 @@ nav button.active{color:#73baff}
 </nav>
 
 <script>
+
+function loadProfile(){
+ const d=JSON.parse(localStorage.getItem("vnworld_profile")||"{}");
+ document.getElementById("editName").value=d.name||"";
+ document.getElementById("editUsername").value=d.username||"";
+ document.getElementById("editBio").value=d.bio||"";
+ document.getElementById("profileName").textContent=d.name||"V.N World istifadəçisi";
+ document.getElementById("profileUsername").textContent=d.username?"@"+d.username.replace(/^@/,""):"@istifadeci";
+ document.getElementById("profileBio").textContent=d.bio||"";
+ if(d.photo) document.getElementById("profilePhoto").innerHTML='<img src="'+d.photo+'" style="width:100%;height:100%;object-fit:cover">';
+}
+function saveProfile(){
+ const d={
+  name:document.getElementById("editName").value.trim(),
+  username:document.getElementById("editUsername").value.trim(),
+  bio:document.getElementById("editBio").value.trim(),
+  photo:JSON.parse(localStorage.getItem("vnworld_profile")||"{}").photo||""
+ };
+ localStorage.setItem("vnworld_profile",JSON.stringify(d));
+ loadProfile();
+ alert("Profil yadda saxlanıldı!");
+}
+function changePhoto(e){
+ const f=e.target.files[0];
+ if(!f)return;
+ if(f.size>2*1024*1024){alert("Şəkil 2 MB-dan kiçik olsun.");return;}
+ const r=new FileReader();
+ r.onload=()=>{
+  const d=JSON.parse(localStorage.getItem("vnworld_profile")||"{}");
+  d.photo=r.result;
+  localStorage.setItem("vnworld_profile",JSON.stringify(d));
+  loadProfile();
+ };
+ r.readAsDataURL(f);
+}
+
 function show(id){
+ if(id==="profile")loadProfile();
  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
  document.getElementById(id).classList.add('active');
  window.scrollTo(0,0);
