@@ -48,6 +48,16 @@ nav button{background:none;border:0;color:#8295b9;font-size:10px;display:flex;fl
 nav button span{font-size:21px}
 nav button.active{color:#73baff}
 .footer{text-align:center;color:#52668d;font-size:11px;margin:25px 0}
+
+.editor-panel{background:#14213a;border:1px solid #2d4267;padding:16px;border-radius:18px;margin:12px 0}
+.editor-panel label{display:block;margin:15px 0 7px;color:#dce8ff;font-size:14px}
+.editor-panel input,.editor-panel select{width:100%;min-height:44px;margin:5px 0 10px;padding:10px;background:#0c1830;color:white;border:1px solid #344a70;border-radius:10px}
+.editor-panel button{border:0;background:#2460a8;color:white;padding:12px 16px;border-radius:10px;margin:7px 5px 7px 0}
+.editor-preview{position:relative;background:#050914;border-radius:12px;min-height:120px;margin:12px 0;overflow:hidden;text-align:center}
+.editor-preview canvas,.editor-preview video{display:block;width:100%;max-height:420px;object-fit:contain}
+#videoTextPreview{position:absolute;left:0;right:0;top:45%;font-weight:bold;font-size:22px;text-shadow:1px 2px 4px black;pointer-events:none}
+.editor-panel small,.editor-panel p{color:#b9c9e5;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -106,11 +116,61 @@ nav button.active{color:#73baff}
 </section>
 <section id="video" class="view">
  <button class="back" onclick="goHome()">← Ana səhifə</button>
- <div class="placeholder"><div class="big">🎬</div><h2>Video redaktə</h2><p>Video redaktə alətləri hazırlanacaq.</p></div>
+ <h2>🎬 Video redaktə</h2>
+ <div class="editor-panel">
+  <label>Video seç</label>
+  <input type="file" accept="video/*" onchange="loadVideo(event)">
+  <div class="editor-preview">
+   <video id="videoPreview" controls playsinline></video>
+   <div id="videoTextPreview"></div>
+  </div>
+  <label>Başlanğıc (saniyə)</label>
+  <input id="videoStart" type="number" min="0" value="0">
+  <label>Bitmə (saniyə)</label>
+  <input id="videoEnd" type="number" min="0" value="0">
+  <label>Sürət</label>
+  <select id="videoSpeed" onchange="setVideoSpeed()">
+   <option value="0.5">0.5x</option><option value="1" selected>1x</option>
+   <option value="1.5">1.5x</option><option value="2">2x</option>
+  </select>
+  <label>Filtr</label>
+  <select id="videoFilter" onchange="setVideoFilter()">
+   <option value="none">Normal</option><option value="grayscale(1)">Ağ-qara</option>
+   <option value="sepia(1)">Sepia</option><option value="contrast(1.4)">Kontrast</option>
+   <option value="brightness(1.2)">Parlaq</option>
+  </select>
+  <label>Videonun üzərinə yazı</label>
+  <input id="videoText" placeholder="Mətn yaz..." oninput="setVideoText()">
+  <button onclick="previewVideoTrim()">Kəsim vaxtını yoxla</button>
+  <p id="videoStatus">Video seçərək başla.</p>
+  <small>Hazırda video önizləmə və tənzimləmələr işləyir. Kəsilmiş videonun ixracı növbəti mərhələdə qoşulacaq.</small>
+ </div>
 </section>
 <section id="photo" class="view">
  <button class="back" onclick="goHome()">← Ana səhifə</button>
- <div class="placeholder"><div class="big">📸</div><h2>Foto redaktə</h2><p>Foto redaktə alətləri hazırlanacaq.</p></div>
+ <h2>📸 Foto redaktə</h2>
+ <div class="editor-panel">
+  <label>Şəkil seç</label>
+  <input type="file" accept="image/*" onchange="loadPhoto(event)">
+  <div class="editor-preview">
+   <canvas id="photoCanvas"></canvas>
+  </div>
+  <label>Parlaqlıq</label>
+  <input id="photoBright" type="range" min="50" max="200" value="100" oninput="drawPhoto()">
+  <label>Kontrast</label>
+  <input id="photoContrast" type="range" min="50" max="200" value="100" oninput="drawPhoto()">
+  <label>Filtr</label>
+  <select id="photoFilter" onchange="drawPhoto()">
+   <option value="none">Normal</option><option value="grayscale(1)">Ağ-qara</option>
+   <option value="sepia(1)">Sepia</option><option value="saturate(1.7)">Rəngli</option>
+   <option value="contrast(1.3)">Kontrast</option>
+  </select>
+  <label>Şəkil üzərinə yazı</label>
+  <input id="photoText" placeholder="Mətn yaz..." oninput="drawPhoto()">
+  <button onclick="rotatePhoto()">↻ Döndür</button>
+  <button onclick="savePhoto()">Şəkli yadda saxla</button>
+  <p id="photoStatus">Şəkil seçərək başla.</p>
+ </div>
 </section>
 <section id="community" class="view">
  <button class="back" onclick="goHome()">← Ana səhifə</button>
@@ -217,6 +277,57 @@ async function sendAI(){
  }catch(e){waiting.textContent='Serverlə əlaqə qurulmadı.'}
  messages.scrollTop=messages.scrollHeight;
 }
+
+let photoImage = null;
+let photoRotation = 0;
+let videoObjectUrl = null;
+
+function loadPhoto(event){
+ const file=event.target.files[0]; if(!file)return;
+ const img=new Image();
+ img.onload=()=>{photoImage=img;photoRotation=0;drawPhoto();document.getElementById('photoStatus').textContent='Şəkil hazırdır.'};
+ img.onerror=()=>document.getElementById('photoStatus').textContent='Şəkli açmaq mümkün olmadı.';
+ img.src=URL.createObjectURL(file);
+}
+function drawPhoto(){
+ if(!photoImage)return;
+ const c=document.getElementById('photoCanvas'),ctx=c.getContext('2d');
+ const r=photoRotation%180!==0;
+ c.width=r?photoImage.height:photoImage.width;
+ c.height=r?photoImage.width:photoImage.height;
+ ctx.save();ctx.translate(c.width/2,c.height/2);ctx.rotate(photoRotation*Math.PI/180);
+ ctx.filter='brightness('+document.getElementById('photoBright').value+'%) contrast('+document.getElementById('photoContrast').value+'%) '+document.getElementById('photoFilter').value;
+ ctx.drawImage(photoImage,-photoImage.width/2,-photoImage.height/2);
+ ctx.filter='none';
+ const t=document.getElementById('photoText').value;
+ if(t){ctx.fillStyle='white';ctx.strokeStyle='black';ctx.lineWidth=3;ctx.textAlign='center';ctx.font='bold 34px Arial';ctx.strokeText(t,0,photoImage.height/2-35);ctx.fillText(t,0,photoImage.height/2-35)}
+ ctx.restore();
+}
+function rotatePhoto(){if(!photoImage)return;photoRotation=(photoRotation+90)%360;drawPhoto()}
+function savePhoto(){
+ if(!photoImage){document.getElementById('photoStatus').textContent='Əvvəlcə şəkil seç.';return}
+ const a=document.createElement('a');a.download='VN-World-photo.png';a.href=document.getElementById('photoCanvas').toDataURL('image/png');a.click();
+ document.getElementById('photoStatus').textContent='İxrac sorğusu göndərildi. Yadda saxlanmasını yoxla.';
+}
+function loadVideo(event){
+ const f=event.target.files[0];if(!f)return;
+ if(videoObjectUrl)URL.revokeObjectURL(videoObjectUrl);
+ videoObjectUrl=URL.createObjectURL(f);
+ const v=document.getElementById('videoPreview');v.src=videoObjectUrl;
+ v.onloadedmetadata=()=>{document.getElementById('videoStart').value=0;document.getElementById('videoEnd').value=v.duration.toFixed(1);document.getElementById('videoStatus').textContent='Video yükləndi.'};
+}
+function setVideoSpeed(){document.getElementById('videoPreview').playbackRate=Number(document.getElementById('videoSpeed').value)}
+function setVideoFilter(){document.getElementById('videoPreview').style.filter=document.getElementById('videoFilter').value}
+function setVideoText(){document.getElementById('videoTextPreview').textContent=document.getElementById('videoText').value}
+function previewVideoTrim(){
+ const v=document.getElementById('videoPreview');
+ const start=Number(document.getElementById('videoStart').value),end=Number(document.getElementById('videoEnd').value);
+ if(!v.src){document.getElementById('videoStatus').textContent='Əvvəlcə video seç.';return}
+ if(start<0||end<=start||end>v.duration){document.getElementById('videoStatus').textContent='Başlanğıc və bitmə vaxtını düzgün yaz.';return}
+ v.currentTime=start;v.play();
+ document.getElementById('videoStatus').textContent='Önizləmə '+start+'–'+end+' saniyə üçün quruldu. İxrac hələ qoşulmayıb.';
+}
+
 </script>
 </body>
 </html>
