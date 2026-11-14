@@ -2,110 +2,165 @@
 <html lang="az">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101a38">
 <title>V.N World</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;padding:22px 17px 35px;min-height:100vh;
- color:white;font-family:Arial,sans-serif;
- background:radial-gradient(circle at top,#304b91,#101a38 55%,#070b18);
-}
-header{text-align:center;padding:30px 0}
-.cloud{
- width:145px;height:75px;margin:30px auto 20px;
- position:relative;display:flex;align-items:center;
- justify-content:center;border-radius:50px;
- background:linear-gradient(135deg,#54d5ff,#6269ff,#a66bff);
- box-shadow:0 0 40px #657aff88;
-}
-.cloud:before,.cloud:after{
- content:"";position:absolute;background:inherit;border-radius:50%;
-}
-.cloud:before{width:65px;height:65px;top:-25px;left:23px}
-.cloud:after{width:75px;height:75px;top:-35px;right:18px}
-.logo{position:relative;z-index:2;font-size:32px;font-weight:900}
-.world{letter-spacing:7px;color:#b8d9ff;font-size:12px}
-h1{letter-spacing:4px;font-size:27px;margin:18px 0 5px}
-.tagline{color:#9eb8e8;font-size:13px}
-.card{
- padding:21px;margin:16px 0;border-radius:20px;
- background:linear-gradient(145deg,#26395dcc,#111d38ee);
- border:1px solid #718bd455;
- box-shadow:0 12px 30px #0004;
-}
-p{color:#b4c5e3;line-height:1.6}
-#aiMessages{
- min-height:65px;max-height:280px;overflow:auto;
- background:#0a142b;border-radius:13px;padding:12px;
-}
-input{
- width:100%;padding:15px;margin:13px 0;
- background:#263957;color:white;border:1px solid #49638d;
- border-radius:12px;font-size:15px;
-}
-button{
- width:100%;padding:15px;border:0;border-radius:12px;
- color:white;font-weight:bold;font-size:15px;
- background:linear-gradient(100deg,#397ff5,#8259f5);
-}
-.footer{text-align:center;color:#7186ad;font-size:12px;margin-top:30px}
+body{margin:0;background:#080f22;color:#fff;font-family:Arial,sans-serif;padding-bottom:85px}
+header{padding:23px 20px 15px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#39d5ff,#5968ff,#a56aff);display:grid;place-items:center;font-size:17px;font-weight:900;box-shadow:0 0 22px #5968ff66}
+.brandname{font-size:19px;font-weight:900;letter-spacing:2px}
+.brandname small{display:block;font-size:9px;letter-spacing:5px;color:#8daeff;margin-top:4px}
+.profile{width:42px;height:42px;border-radius:50%;background:#1c2b4b;display:grid;place-items:center;font-size:20px}
+main{padding:8px 18px}
+.welcome{padding:25px 21px;border-radius:23px;background:linear-gradient(120deg,#263e79,#493c91);position:relative;overflow:hidden;margin-bottom:23px}
+.welcome:after{content:"✦";position:absolute;font-size:110px;right:12px;top:-15px;color:#ffffff18}
+.welcome h1{font-size:25px;margin:0 0 9px}
+.welcome p{font-size:13px;color:#d1ddff;margin:0;line-height:1.6}
+.search{padding:15px;background:#141f38;border:1px solid #26385c;border-radius:14px;color:#8ea3ca;margin-bottom:24px;font-size:14px}
+.heading{font-size:17px;margin:0 0 15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.tile{min-height:133px;padding:17px 15px;border-radius:19px;background:linear-gradient(145deg,#192a49,#111a30);border:1px solid #304568;cursor:pointer;transition:.2s}
+.tile:active{transform:scale(.97)}
+.tile .ico{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#2864b9,#7759c9);display:grid;place-items:center;font-size:23px;margin-bottom:13px}
+.tile h3{font-size:14px;margin:0 0 6px}
+.tile p{font-size:11px;color:#91a6cb;margin:0}
+.feature{margin-top:22px;padding:20px;border-radius:19px;background:linear-gradient(110deg,#183d68,#342c6d);border:1px solid #49649a}
+.feature h3{margin:0 0 7px;font-size:16px}
+.feature p{font-size:12px;color:#c1d4fa;margin:0}
+.view{display:none}
+.view.active{display:block}
+.back{border:0;background:#1c2d4c;color:white;padding:12px 16px;border-radius:12px;margin-bottom:20px}
+.panel{background:#14213a;border:1px solid #2d4267;padding:19px;border-radius:19px}
+#aiMessages{height:330px;overflow-y:auto;background:#0b1529;padding:13px;border-radius:13px;margin:15px 0}
+.msg{padding:10px 12px;background:#1c3153;border-radius:12px;margin:9px 0;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.msg.ai{background:#26305a}
+.sendrow{display:flex;gap:8px}
+input{min-width:0;flex:1;padding:14px;border:1px solid #344a70;border-radius:12px;background:#0c1830;color:white;font-size:14px}
+.send{border:0;border-radius:12px;background:linear-gradient(120deg,#397ff5,#8259f5);color:white;padding:0 18px;font-size:18px}
+.placeholder{text-align:center;padding:48px 15px}
+.placeholder .big{font-size:48px}
+.placeholder p{color:#9db1d5;font-size:13px;line-height:1.6}
+nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:#101b31;border-top:1px solid #293b5c;display:flex;justify-content:space-around;align-items:center;z-index:5;padding-bottom:env(safe-area-inset-bottom)}
+nav button{background:none;border:0;color:#8295b9;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px}
+nav button span{font-size:21px}
+nav button.active{color:#73baff}
+.footer{text-align:center;color:#52668d;font-size:11px;margin:25px 0}
 </style>
 </head>
 <body>
 <header>
- <div class="cloud"><span class="logo">V.N</span></div>
- <div class="world">WORLD</div>
- <h1>V.N WORLD</h1>
- <div class="tagline">Your world, your possibilities</div>
+ <div class="brand">
+  <div class="logo">V.N</div>
+  <div class="brandname">V.N WORLD<small>YOUR WORLD</small></div>
+ </div>
+ <div class="profile">👤</div>
 </header>
 
-<div class="card">
- <h2>Xoş gəlmisən! 👋</h2>
- <p>V.N World – öz dünyan, öz imkanların. Hər şey bir yerdə!</p>
-</div>
+<main>
+<section id="home" class="view active">
+ <div class="welcome">
+  <h1>Xoş gəlmisən! 👋</h1>
+  <p>V.N World-a xoş gəldin.<br>Hər şey bir tətbiqdə, sənin dünyanda!</p>
+ </div>
+ <div class="search">⌕ &nbsp; Nə axtarırsan?</div>
+ <h2 class="heading">Kəşf et</h2>
+ <div class="grid">
+  <div class="tile" onclick="openSection('chat')"><div class="ico">💬</div><h3>Söhbət</h3><p>Dostlarınla yazış</p></div>
+  <div class="tile" onclick="openSection('ai')"><div class="ico">🤖</div><h3>V.N AI</h3><p>Süni intellekt köməkçisi</p></div>
+  <div class="tile" onclick="openSection('fun')"><div class="ico">🎮</div><h3>Əyləncələr</h3><p>Əylən və vaxt keçir</p></div>
+  <div class="tile" onclick="openSection('video')"><div class="ico">🎬</div><h3>Video redaktə</h3><p>Videolarını hazırla</p></div>
+  <div class="tile" onclick="openSection('photo')"><div class="ico">📸</div><h3>Foto redaktə</h3><p>Şəkillərini dəyiş</p></div>
+  <div class="tile" onclick="openSection('community')"><div class="ico">🌐</div><h3>İcma</h3><p>Yeni insanlarla tanış ol</p></div>
+ </div>
+ <div class="feature">
+  <h3>✨ Sənin dünyan, sənin imkanların</h3>
+  <p>V.N World ilə yeni imkanları kəşf et!</p>
+ </div>
+ <div class="footer">© 2026 V.N World</div>
+</section>
 
-<div class="card">
- <h3>🤖 V.N AI</h3>
- <div id="aiMessages">Salam! Mən V.N AI. Sənə necə kömək edə bilərəm?</div>
- <input id="aiInput" placeholder="Mesajını yaz...">
- <button onclick="sendAI()">Göndər ➤</button>
-</div>
+<section id="chat" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <h2>Söhbət 💬</h2>
+ <div class="panel"><p>Dostlarla söhbət bölməsi</p><p style="color:#91a6cb;font-size:13px">Mesajlaşma funksiyası növbəti mərhələdə hazırlanacaq.</p></div>
+</section>
 
-<div class="footer">© 2026 V.N World · Sənin dünyan</div>
+<section id="ai" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <h2>V.N AI 🤖</h2>
+ <div class="panel">
+  <div id="aiMessages"><div class="msg ai">Salam! Mən V.N AI. Sənə necə kömək edə bilərəm?</div></div>
+  <div class="sendrow">
+   <input id="aiInput" placeholder="Mesajını yaz..." onkeydown="if(event.key==='Enter')sendAI()">
+   <button class="send" onclick="sendAI()">➤</button>
+  </div>
+ </div>
+</section>
+
+<section id="fun" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <div class="placeholder"><div class="big">🎮</div><h2>Əyləncələr</h2><p>Oyunlar və əyləncə bölməsi hazırlanacaq.</p></div>
+</section>
+<section id="video" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <div class="placeholder"><div class="big">🎬</div><h2>Video redaktə</h2><p>Video redaktə alətləri hazırlanacaq.</p></div>
+</section>
+<section id="photo" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <div class="placeholder"><div class="big">📸</div><h2>Foto redaktə</h2><p>Foto redaktə alətləri hazırlanacaq.</p></div>
+</section>
+<section id="community" class="view">
+ <button class="back" onclick="goHome()">← Ana səhifə</button>
+ <div class="placeholder"><div class="big">🌐</div><h2>İcma</h2><p>İcma bölməsi hazırlanacaq.</p></div>
+</section>
+<section id="profile" class="view">
+ <div class="placeholder"><div class="big">👤</div><h2>Profil</h2><p>Profil ayarları hazırlanacaq.</p></div>
+</section>
+</main>
+
+<nav>
+ <button class="active" onclick="goHome()"><span>⌂</span>Ana səhifə</button>
+ <button onclick="openSection('chat')"><span>💬</span>Söhbət</button>
+ <button onclick="openSection('fun')"><span>🎮</span>Əyləncə</button>
+ <button onclick="openSection('profile')"><span>👤</span>Profil</button>
+</nav>
 
 <script>
+function show(id){
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+}
+function goHome(){show('home');document.querySelector('nav button').classList.add('active')}
+function openSection(id){
+ show(id);
+ const buttons=[...document.querySelectorAll('nav button')];
+ const index={home:0,chat:1,fun:2,profile:3}[id];
+ if(index!==undefined)buttons[index].classList.add('active');
+}
 async function sendAI(){
  const input=document.getElementById('aiInput');
  const messages=document.getElementById('aiMessages');
  const value=input.value.trim();
  if(!value)return;
-
- const user=document.createElement('p');
- const label=document.createElement('b');
- label.textContent='Sən: ';
- user.append(label,document.createTextNode(value));
- messages.appendChild(user);
- input.value='';
-
+ const user=document.createElement('div');
+ user.className='msg';user.textContent='Sən: '+value;
+ messages.appendChild(user);input.value='';
+ const waiting=document.createElement('div');
+ waiting.className='msg ai';waiting.textContent='V.N AI yazır...';
+ messages.appendChild(waiting);messages.scrollTop=messages.scrollHeight;
  try{
   const response=await fetch('http://127.0.0.1:3000/chat',{
-   method:'POST',
-   headers:{'Content-Type':'application/json'},
+   method:'POST',headers:{'Content-Type':'application/json'},
    body:JSON.stringify({message:value})
   });
   const data=await response.json();
-  const reply=document.createElement('p');
-  const name=document.createElement('b');
-  name.textContent='V.N AI: ';
-  reply.append(name,document.createTextNode(data.reply||data.error||'Cavab alınmadı'));
-  messages.appendChild(reply);
- }catch(error){
-  const err=document.createElement('p');
-  err.textContent='Serverlə əlaqə qurulmadı.';
-  messages.appendChild(err);
- }
+  waiting.textContent='V.N AI: '+(data.reply||data.error||'Cavab alınmadı');
+ }catch(e){waiting.textContent='Serverlə əlaqə qurulmadı.'}
  messages.scrollTop=messages.scrollHeight;
 }
 </script>
